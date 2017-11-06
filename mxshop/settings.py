@@ -51,7 +51,8 @@ INSTALLED_APPS = [
     'xadmin',
     'crispy_forms',
     'guardian',
-    'rest_framework'
+    'rest_framework',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -142,3 +143,9 @@ STATIC_URL = '/static/'
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+# REST_FRAMEWORK={
+#     # 'DEFAULT_PAGINATION_CLASS': 'apps.core.pagination.StandardResultsSetPagination',
+#     'PAGE_SIZE':10,
+#
+# }
