@@ -6,14 +6,44 @@ from .serializers import GoodsSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-class GoodsListView(APIView):
+from rest_framework import mixins
+from rest_framework import generics
+from rest_framework.pagination import PageNumberPagination
+from rest_framework import viewsets
+from django_filters.rest_framework import DjangoFilterBackend
+from .filters import GoodsFilter
+from rest_framework import filters
+
+class GoodsPagination(PageNumberPagination):
+    page_size = 20
+    page_size_query_param = "page_size"
+    page_query_param = 'p'
+    max_page_size = 100
+
+# class GoodsListView(APIView):
+#     """
+#     List all goods, or create a new goods.
+#     """
+#     def get(self, request, format=None):
+#         goods = Goods.objects.all()[:10]
+#         goods_serializers = GoodsSerializer(goods, many=True)
+#         return Response(goods_serializers.data)
+
+
+class GoodsListViewSet(mixins.ListModelMixin,viewsets.GenericViewSet):
     """
-    List all goods, or create a new goods.
+   商品列表页 分页 过滤 搜索 排序
     """
-    def get(self, request, format=None):
-        goods = Goods.objects.all()[:10]
-        goods_serializers = GoodsSerializer(goods, many=True)
-        return Response(goods_serializers.data)
+    queryset=Goods.objects.all()
+    serializer_class=GoodsSerializer
+    pagination_class = GoodsPagination
+    filter_backends = (DjangoFilterBackend,filters.SearchFilter,filters.OrderingFilter)
+    filter_class = GoodsFilter
+    search_fields = ('name', 'goods_brief', 'goods_desc')
+    ordering_fields=('sold_num', 'add_time')
+    # filter_fields=('name','shop_price')
+    # def get(self, request, *args, **kwargs):
+    #     return self.list(request, *args, **kwargs)
 
     # def post(self, request, format=None):
     #     serializer = GoodsSerializer(data=request.data)
