@@ -12,10 +12,24 @@ from goods.models import Goods,GoodsCategory
 #         Create and return a new `Goods` instance, given the validated data.
 #         """
 #          Goods.objects.create(**validated_data)return
-class CategorySerializer(serializers.ModelSerializer):
+class CategorySerializer3(serializers.ModelSerializer):
     class Meta:
-        model=GoodsCategory
-        fields="__all__"
+        model = GoodsCategory
+        fields = "__all__"
+
+
+class CategorySerializer2(serializers.ModelSerializer):
+    sub_cat = CategorySerializer3(many=True)
+    class Meta:
+        model = GoodsCategory
+        fields = "__all__"
+
+
+class CategorySerializer(serializers.ModelSerializer):
+    sub_cat = CategorySerializer2(many=True)
+    class Meta:
+        model = GoodsCategory
+        fields = "__all__"
 
 
 class GoodsSerializer(serializers.ModelSerializer):
@@ -24,3 +38,13 @@ class GoodsSerializer(serializers.ModelSerializer):
         model=Goods
         # fields=('name','click_num','market_price','add_time')
         fields="__all__"
+
+
+class GoodsCategorySerializer(serializers.ModelSerializer):
+    """
+    商品类别序列化
+    """
+    class Meta:
+        model=GoodsCategory
+        fields="__all__"
+

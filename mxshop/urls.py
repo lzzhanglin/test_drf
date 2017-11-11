@@ -19,12 +19,15 @@ import xadmin
 from mxshop.settings import MEDIA_ROOT
 from django.views.static import serve
 from rest_framework.documentation import include_docs_urls
-from goods.views import GoodsListViewSet
+from goods.views import GoodsListViewSet, CategoryViewSet
 from rest_framework.routers import DefaultRouter
+from rest_framework.authtoken import views
+from rest_framework_jwt.views import obtain_jwt_token
 
 
 router=DefaultRouter()
-router.register(r'goods',GoodsListViewSet)
+router.register(r'goods',GoodsListViewSet,base_name="goods")
+router.register(r'categorys',CategoryViewSet,base_name="categorys")
 
 goods_list = GoodsListViewSet.as_view({
     'get': 'list',
@@ -40,4 +43,8 @@ urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'docs/', include_docs_urls(title="慕学生鲜")),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    # drf自带token认证
+    url(r'^api-token-auth/', views.obtain_auth_token),
+    # jwt的认证接口
+    url(r'^api-token-auth/', obtain_jwt_token),
 ]
